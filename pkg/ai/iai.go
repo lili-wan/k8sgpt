@@ -28,6 +28,7 @@ var (
 		&SageMakerAIClient{},
 		&GoogleGenAIClient{},
 		&HuggingfaceClient{},
+		&RestAIClient{},
 	}
 	Backends = []string{
 		openAIClientName,
@@ -39,6 +40,7 @@ var (
 		googleAIClientName,
 		noopAIClientName,
 		huggingfaceAIClientName,
+		restAIClientName,
 	}
 )
 
@@ -70,6 +72,7 @@ type IAIConfig interface {
 	GetProviderRegion() string
 	GetTopP() float32
 	GetMaxTokens() int
+	GetRequestBody() string
 }
 
 func NewClient(provider string) IAI {
@@ -98,6 +101,7 @@ type AIProvider struct {
 	ProviderRegion string  `mapstructure:"providerregion" yaml:"providerregion,omitempty"`
 	TopP           float32 `mapstructure:"topp" yaml:"topp,omitempty"`
 	MaxTokens      int     `mapstructure:"maxtokens" yaml:"maxtokens,omitempty"`
+	RequestBody    string  `mapstructure:"requestbody"`
 }
 
 func (p *AIProvider) GetBaseURL() string {
@@ -133,6 +137,9 @@ func (p *AIProvider) GetTemperature() float32 {
 
 func (p *AIProvider) GetProviderRegion() string {
 	return p.ProviderRegion
+}
+func (p *AIProvider) GetRequestBody() string {
+	return p.RequestBody
 }
 
 var passwordlessProviders = []string{"localai", "amazonsagemaker", "amazonbedrock"}
